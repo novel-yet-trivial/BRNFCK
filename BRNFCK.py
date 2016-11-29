@@ -8,10 +8,8 @@
 # ] | x
 
 pointer   = 0
-ar        = []
+ar        = [0]*3000
 total_out = ""
-for x in range (3000):
-    ar.append(0)
 print("Array: {}".format(len(ar)))
 
 def execute(pos, char):
