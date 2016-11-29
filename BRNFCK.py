@@ -8,15 +8,15 @@
 # ] | x
 
 pointer   = 0
-ar        = [000]
+ar        = []
 total_out = ""
-for x in range (2999):
-    ar.append(000)
+for x in range (3000):
+    ar.append(0)
 print("Array: {}".format(len(ar)))
 
 def execute(pos, char):
     global pointer, ar, total_out
-    print(char)
+    print(pos, char)
     if char == ">":
         if pointer < 3000:
             pointer += 1
