@@ -28,15 +28,15 @@ def execute(pos, char):
         else:
             raise Exception("ERROR: Pointer cannot decrease past 0")
     elif char == "+":
-        if ar[pointer] < 1000:
+        if ar[pointer] < 255:
             ar[pointer] += 1
         else:
-            raise Exception("ERROR: Value cannot exceed 999")
+            ar[pointer] = 0
     elif char == "-":
         if ar[pointer] > 0:
             ar[pointer] -= 1
         else:
-            raise Exception("ERROR: Value cannot be negative")
+            ar[pointer] = 255
     elif char == ".":
         print("Array Value: {}".format(str(ar[pointer])))
         print("Output:      {}".format(chr(ar[pointer])))
