@@ -1,3 +1,9 @@
+# < | ✓
+# + | ✓
+# > | ✓
+# - | ✓
+# . | ✓
+# , | ✓
 # [ | x
 # ] | x
 
@@ -15,22 +21,22 @@ def execute(pos, char):
         if pointer < 3000:
             pointer += 1
         else:
-            raise("ERROR: Pointer cannot increase past 3000")
+            raise Exception("ERROR: Pointer cannot increase past 3000")
     elif char == "<":
         if pointer > 0:
             pointer -= 1
         else:
-            raise("ERROR: Pointer cannot decrease past 0")
+            raise Exception("ERROR: Pointer cannot decrease past 0")
     elif char == "+":
         if ar[pointer] < 1000:
             ar[pointer] += 1
         else:
-            raise("ERROR: Value cannot exceed 999")
+            raise Exception("ERROR: Value cannot exceed 999")
     elif char == "-":
         if ar[pointer] > 0:
             ar[pointer] -= 1
         else:
-            raise("ERROR: Value cannot be negative")
+            raise Exception("ERROR: Value cannot be negative")
     elif char == ".":
         print("Array Value: {}".format(str(ar[pointer])))
         print("Output:      {}".format(chr(ar[pointer])))
@@ -54,4 +60,5 @@ with open ("brain.txt", "r") as f:
     for x, y in enumerate(f.read()):
         execute(x, y)
 
+print(ar[0:10])  # Show first 10 in array
 print("Total output: {}".format(total_out))
