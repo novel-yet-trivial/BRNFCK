@@ -28,9 +28,12 @@ def execute(char):
         else:
             ar[pointer] = 255
     elif char == ".":
-        print("Array Value: {}".format(str(ar[pointer])))
-        print("Output:      {}".format(chr(ar[pointer])))
-        total_out += chr(ar[pointer])
+        try:
+            print("Array Value: {}".format(str(ar[pointer])))
+            print("Output:      {}".format(chr(ar[pointer])))
+            total_out += chr(ar[pointer])
+        except:
+            print(". read but {} has no ASCII value".format(str(ar[pointer])))
     elif char == ",":
         inp = int(input("INPUT: "))
         ar[pointer] = inp
