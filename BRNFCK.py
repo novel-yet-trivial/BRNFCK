@@ -1,20 +1,14 @@
-# < | ✓
-# + | ✓
-# > | ✓
-# - | ✓
-# . | ✓
-# , | ✓
-# [ | x
-# ] | x
+pointer     = 0         # Pointer
+ar          = [0]*3000  # Array
+total_out   = ""        # Final output
+opening_brck = []       # list to contain the positions of the opening brackets
+loop = []  # list which maps the positions of open brackets to closed
+           # brackets
 
-pointer   = 0
-ar        = [0]*3000
-total_out = ""
-print("Array: {}".format(len(ar)))
+print("Initialised Array: {} cells".format(len(ar)))
 
-def execute(pos, char):
-    global pointer, ar, total_out
-    print(pos, char)
+def execute(char):
+    global pointer, ar, total_out, opening_brck, loop
     if char == ">":
         if pointer < 3000:
             pointer += 1
@@ -42,21 +36,36 @@ def execute(pos, char):
     elif char == ",":
         inp = int(input("INPUT: "))
         ar[pointer] = inp
-
-    # How to do loop algorithm???
-    elif char == "[":
-        pass
-    elif char == "]":
-        pass
-    # END loop algorithm
-
     else:
         pass
+    print("READ: Char: {}, Array: {}".format(char, ar[:10]))
 
+def interpret(code):
+    for pos, char in enumerate(code):
+        if char == "[":
+            opening_brck.append(pos+1)  # Add 1 so it doesent execute() the
+                                        # the actual [ bracket
+        elif char == "]":
+            try:
+                loop.append(opening_brck.pop())  # Append to loop where the
+                                                 # latest [ was and remove it
+                                                 # from opening_brck so it wont
+                                                 # be executed again
+                loop.append(pos)  # Append pos of the latest ] bracket
+                while ar[pointer] > 0:
+                # execute loop
+                # Below logic: execute the code after the latest [ and before
+                # the latest ]
+                    for x in code[loop[0]:loop[1]]:
+                        execute(x)
+            except IndexError:
+                raise ValueError("Supplied string isn't balanced, too many ]'s!")
+        else:
+            execute(char)
 
 with open ("brain.txt", "r") as f:
-    for x, y in enumerate(f.read()):
-        execute(x, y)
+    interpret(f.read())  # Read code from .txt file into function
 
-print(ar[0:10])  # Show first 10 in array
+print("************\nEND RESULTS:")
+print(ar[:10])  # Show first 10 in array
 print("Total output: {}".format(total_out))
