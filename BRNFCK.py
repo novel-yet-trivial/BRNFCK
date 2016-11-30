@@ -35,7 +35,7 @@ def execute(char):
         except:
             print(". read but {} has no ASCII value".format(str(ar[pointer])))
     elif char == ",":
-        inp = int(input("INPUT: "))
+        inp = ord(input("INPUT: "))
         ar[pointer] = inp
     else:
         pass
