@@ -2,13 +2,11 @@ pointer     = 0         # Pointer
 ar          = [0]*3000  # Array
 total_out   = ""        # Final output
 opening_brck = []       # list to contain the positions of the opening brackets
-loop = []  # list which maps the positions of open brackets to closed
-           # brackets
 
 print("Initialised Array: {} cells".format(len(ar)))
 
 def execute(char):
-    global pointer, ar, total_out, opening_brck, loop
+    global pointer, ar, total_out, opening_brck
     if char == ">":
         if pointer < 3000:
             pointer += 1
@@ -47,6 +45,8 @@ def interpret(code):
                                         # the actual [ bracket
         elif char == "]":
             try:
+                loop = []  # list which maps the positions of open brackets to closed
+                           # brackets
                 loop.append(opening_brck.pop())  # Append to loop where the
                                                  # latest [ was and remove it
                                                  # from opening_brck so it wont
