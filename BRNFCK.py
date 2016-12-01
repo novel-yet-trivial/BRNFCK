@@ -4,7 +4,8 @@ class PointerBoundsError(Exception):
     pass
 
 class BrainFuck(object):
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         self.pointer = None
         self.ar = None
         self.total_out = None
@@ -30,11 +31,12 @@ class BrainFuck(object):
     def output(self):
         try:
             char = chr(self.current)
-            # Array value
-            print("Array Value: {}".format(self.current))
-            # chr() of value
-            print("Output:      {}".format(char))
-            # Append chr() to final output string
+            if self.debug:
+                # Array value
+                print("Array Value: {}".format(self.current))
+                # chr() of value
+                print("Output:      {}".format(char))
+                # Append chr() to final output string
             self.total_out += char
         except ValueError:
             print(". read but {} has no ASCII value".format(self.current))
@@ -57,48 +59,33 @@ class BrainFuck(object):
             inp = ord(input("INPUT: "))
             self.ar[self.pointer] = inp
 
-        # Displays the character read and the first 10 values in the array/tape
-        print("READ: Char: {}, Array: {}".format(char,self.ar[:10]))
-
-    def map_loops(self, code):
-        # Maps [ to ] so if a [ is encountered its corresponding ] can be found
-        open_brcks = []  # Where [ are
-        self.loop_map   = {}  # Dict for mapping: { pos of [ : pos of ] }
-        for pos, char in enumerate(code):  # Map each [ to ]
-            if char == "[":
-                open_brcks.append(pos)  # Add to the [ list
-            if char == "]":
-                try:
-                # Remove the latest position of a [ from the list and map it to
-                # it's closing ]
-                    self.loop_map[open_brcks.pop()] = pos
-                except IndexError:  # If it can't pop() beacuse there isn't a [
-                    raise ValueError("Too many ]'s")
-        if open_brcks:  # If there are unmapped [
-            raise ValueError("Too many ['s")
+        if self.debug:
+            # Displays the character read and the first 10 values in the array/tape
+            if char in "<>+-.,":
+                print("READ: Char: {}, Array: {}".format(char,self.ar[:10]))
 
     def interpret(self, code):
         self.pointer     = 0         # Pointer
         self.ar          = [0]*3000  # Array
         self.total_out   = ""        # Final output
         print("Initialised array: {} cells".format(len(self.ar)))
-        self.map_loops(code)
+
         # Start main computations
         counter  = 0   # Where it is executing from
         open_brcks = []
         while counter < len(code):
             to_exec = code[counter]  # Get the current character
-            if to_exec in {"<", ">", ",", ".", "+", "-"}:
-                self.execute(to_exec)  # Execute command
-            elif to_exec == "[":
+            if to_exec == "[":
                 # If the byte at the self.pointer is > 0
-                if self.current > 0:
+                if self.current:
                     open_brcks.append(counter)  # Add the position to a list
                 else:
-                    counter = self.loop_map[counter]  # Else skip the loop
+                    counter = code.find(']', counter) #find the matching bracket
             elif to_exec == "]":
                 counter = open_brcks.pop() - 1  # Go back to the [
                                         # -1 because of the += below
+            else:
+                self.execute(to_exec)  # Execute command
             counter += 1
         return("************\nEND RESULTS:\n{}\nTotal output: {}".format(
                                                                 self.ar[:10],
