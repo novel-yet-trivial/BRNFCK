@@ -1,7 +1,7 @@
 class brainfuck():
     def __init__(self):
-        self.pointer     = 0         # self.pointer
-        self.ar          = [0]*3000  #self.array
+        self.pointer     = 0         # Pointer
+        self.ar          = [0]*3000  # Array
         self.total_out   = ""        # Final output
         print("Initialised array: {} cells".format(len(self.ar)))
 
