@@ -59,10 +59,16 @@ class BrainFuck(object):
             inp = ord(input("INPUT: "))
             self.ar[self.pointer] = inp
 
-        if self.debug:
-            # Displays the character read and the first 10 values in the array/tape
-            if char in "<>+-.,":
-                print("READ: Char: {}, Array: {}".format(char,self.ar[:10]))
+    def find_next_close(self, code, counter):
+        '''finds the next closing bracket.
+        skips the complete brackets in between'''
+        while True:
+            open_ = code.find('[', counter+1)
+            close_ = code.find(']', counter+1)
+            if 0 <= open_ < close_:
+                counter = self.find_next_close(code, open_)
+            else:
+                return close_
 
     def interpret(self, code):
         self.pointer     = 0         # Pointer
@@ -80,17 +86,23 @@ class BrainFuck(object):
                 if self.current:
                     open_brcks.append(counter)  # Add the position to a list
                 else:
-                    counter = code.find(']', counter) #find the matching bracket
+                    counter = self.find_next_close(code, counter) #find the matching bracket
             elif to_exec == "]":
                 counter = open_brcks.pop() - 1  # Go back to the [
                                         # -1 because of the += below
             else:
                 self.execute(to_exec)  # Execute command
             counter += 1
+
+            if self.debug:
+                # Displays the character read and the first 10 values in the array/tape
+                if to_exec in "[]<>+-.,":
+                    print("READ: Count: {}, Char: {}, Val: {}, Array: {}".format(counter, to_exec, self.current, self.ar[:10]))
+
+
         return("************\nEND RESULTS:\n{}\nTotal output: {}".format(
                                                                 self.ar[:10],
                                                                 self.total_out))
-
 
 def main():
     #test case
