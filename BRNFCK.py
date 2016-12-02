@@ -56,17 +56,17 @@ class BrainFuck(object):
             self.output()
 
         elif char == ",":
-            inp = ord(input("INPUT: "))
-            self.ar[self.pointer] = inp
+            self.current = ord(input("INPUT: "))
 
-    def find_next_close(self, code, counter):
+    @staticmethod
+    def find_next_close(code, counter):
         '''finds the next closing bracket.
         skips the complete brackets in between'''
         while True:
             open_ = code.find('[', counter+1)
             close_ = code.find(']', counter+1)
             if 0 <= open_ < close_:
-                counter = self.find_next_close(code, open_)
+                counter = BrainFuck.find_next_close(code, open_)
             else:
                 return close_
 
@@ -78,6 +78,7 @@ class BrainFuck(object):
 
         # Start main computations
         counter  = 0   # Where it is executing from
+        commands = 0
         open_brcks = []
         while counter < len(code):
             to_exec = code[counter]  # Get the current character
@@ -88,8 +89,10 @@ class BrainFuck(object):
                 else:
                     counter = self.find_next_close(code, counter) #find the matching bracket
             elif to_exec == "]":
-                counter = open_brcks.pop() - 1  # Go back to the [
-                                        # -1 because of the += below
+                if self.current:
+                    counter = open_brcks.pop() - 1  # Go back to the [ -1 because of the += below
+                else:
+                    open_brcks.pop()
             else:
                 self.execute(to_exec)  # Execute command
             counter += 1
@@ -98,15 +101,19 @@ class BrainFuck(object):
                 # Displays the character read and the first 10 values in the array/tape
                 if to_exec in "[]<>+-.,":
                     print("READ: Count: {}, Char: {}, Val: {}, Array: {}".format(counter, to_exec, self.current, self.ar[:10]))
+                    commands += 1
 
+        if self.debug:
+            print("total commands processed:{}".format(commands))
+        template = "************\n"
+        template += "END ARRAY:{}\n"
+        template += "END OUTPUT:{}\n"
 
-        return("************\nEND RESULTS:\n{}\nTotal output: {}".format(
-                                                                self.ar[:10],
-                                                                self.total_out))
+        return(template.format(self.ar[:10], self.total_out))
 
 def main():
     #test case
-    bf = BrainFuck()
+    bf = BrainFuck(True)
     print(bf.interpret(" -[------->+<]>++.-[--->+<]>---.")) #should print "Kk"
 
 if __name__ == '__main__':
